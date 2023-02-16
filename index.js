@@ -11,27 +11,25 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+
 app.use(function (req, res, next) {
   if (req.originalUrl && req.originalUrl.split("/").pop() === "favicon.ico") {
     return res.sendStatus(204);
   }
   return next();
 });
+
 app.use(cors());
 
+//Parsers
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use("/", todoRoutes);
-
 // Routes
-app.get("/", (req, res) => {
-  res.send("Server is successfully running");
-});
+app.use("/", todoRoutes);
 
 // Connection to db
 const mongoDB = process.env.MONGODB_URI || process.env.DB_URL;
-
 async function connect() {
   try {
     mongoose.connect(
