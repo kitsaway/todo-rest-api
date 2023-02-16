@@ -31,11 +31,26 @@ app.get("/", (req, res) => {
 
 // Connection to db
 const mongoDB = process.env.MONGODB_URI || process.env.DB_URL;
-mongoose.connect(
-  mongoDB,
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
-  () => {
-    console.log("Connected to db!");
-    app.listen(PORT, () => console.log("Server Up and running"));
+
+async function connect() {
+  try {
+    mongoose.connect(
+      mongoDB,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      },
+      () => {
+        console.log("Connected to db!");
+        app.listen(PORT, () =>
+          console.log(`Server Up and running on port ${PORT}`)
+        );
+      }
+    );
+  } catch (err) {
+    console.error(err);
   }
-);
+}
+
+connect();
